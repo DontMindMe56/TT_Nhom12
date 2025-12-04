@@ -1,4 +1,4 @@
-package com.example.tt_nhom12;
+package com.example.tt_nhom12.ui;
 
 import android.os.Bundle;
 
@@ -7,6 +7,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+
+import com.example.tt_nhom12.R;
 
 public class MainActivity extends AppCompatActivity {
 
