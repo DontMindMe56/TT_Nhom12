@@ -14,22 +14,25 @@ public class User {
     private long updatedAt;
 
     public User() {
+        this.createdAt = System.currentTimeMillis();
+        this.updatedAt = System.currentTimeMillis();
+        this.isSynced = 0;
     }
     public User(String uid, String email, String displayName,
-                String photoUrl, String provider, long createdAt, long lastLogin) {
+                String photoUrl, String provider, long lastLogin) {
         this.uid = uid;
         this.email = email;
         this.displayName = displayName;
         this.photoUrl = photoUrl;
         this.provider = provider;
         this.lastLogin = lastLogin;
-        this.createdAt = createdAt;
+        this.createdAt = System.currentTimeMillis();
+        this.updatedAt = System.currentTimeMillis();
         this.isSynced = 0;
-        this.updatedAt = createdAt;
     }
     public User(int userId, String uid, String email, String displayName,
                 String photoUrl, String provider, long createdAt,
-                long lastLogin, int isSynced, long updatedAt) {
+                long lastLogin, long updatedAt, int isSynced) {
         this.userId = userId;
         this.uid = uid;
         this.email = email;
@@ -38,8 +41,8 @@ public class User {
         this.provider = provider;
         this.createdAt = createdAt;
         this.lastLogin = lastLogin;
-        this.isSynced = isSynced;
         this.updatedAt = updatedAt;
+        this.isSynced = isSynced;
     }
 
     public int getUserId() { return userId; }

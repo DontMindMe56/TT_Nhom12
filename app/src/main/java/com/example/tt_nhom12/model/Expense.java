@@ -3,46 +3,49 @@ package com.example.tt_nhom12.model;
 public class Expense {
 
     private int expenseId;
-    private int userId;
+    private String uid;
     private int categoryId;
     private double amount;
     private long date;        // timestamp
     private String note;
     private long createdAt;
-    private int isSynced;
     private long updatedAt;
+    private int isSynced;
 
     public Expense() {
+        this.createdAt = System.currentTimeMillis();
+        this.updatedAt = System.currentTimeMillis();
+        this.isSynced = 0;
     }
-    public Expense(int userId, int categoryId, double amount, long date, String note) {
-        this.userId = userId;
+    public Expense(String uid, int categoryId, double amount, long date, String note) {
+        this.uid = uid;
         this.categoryId = categoryId;
         this.amount = amount;
         this.date = date;
         this.note = note;
         this.createdAt = System.currentTimeMillis();
-        this.isSynced = 0;
         this.updatedAt = System.currentTimeMillis();
+        this.isSynced = 0;
     }
-    public Expense(int expenseId, int userId, int categoryId, double amount,
-                   long date, String note, long createdAt,int isSynced, long updatedAt) {
+    public Expense(int expenseId, String uid, int categoryId, double amount,
+                   long date, String note, long createdAt, long updatedAt, int isSynced) {
         this.expenseId = expenseId;
-        this.userId = userId;
+        this.uid = uid;
         this.categoryId = categoryId;
         this.amount = amount;
         this.date = date;
         this.note = note;
         this.createdAt = createdAt;
-        this.isSynced = isSynced;
         this.updatedAt = updatedAt;
+        this.isSynced = isSynced;
     }
 
     // Getters and Setters
     public int getExpenseId() { return expenseId; }
     public void setExpenseId(int expenseId) { this.expenseId = expenseId; }
 
-    public int getUserId() { return userId; }
-    public void setUserId(int userId) { this.userId = userId; }
+    public String getUid() { return uid; }
+    public void setUid(String uid) { this.uid = uid; }
 
     public int getCategoryId() { return categoryId; }
     public void setCategoryId(int categoryId) { this.categoryId = categoryId; }

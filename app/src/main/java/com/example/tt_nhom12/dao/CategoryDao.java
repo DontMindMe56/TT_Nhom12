@@ -18,8 +18,7 @@ public class CategoryDao {
 
     public long insert(Category category) {
         ContentValues values = new ContentValues();
-        // không cần put categoryId
-        values.put("user_id", category.getUserId());
+        values.put("user_id", category.getUid());
         values.put("name", category.getName());
         values.put("type", category.getType());
         values.put("created_at", category.getCreatedAt());
@@ -45,25 +44,28 @@ public class CategoryDao {
         return db.delete("categories", "category_id = ?", args);
     }
 
-    public List<Category> getByUser(int userId) {
+    public List<Category> getByUser(String uid) {
         List<Category> list = new ArrayList<>();
 
-        String[] args = {String.valueOf(userId)};
+        String[] args = {uid};
         Cursor c = db.rawQuery("SELECT * FROM categories WHERE user_id = ?", args);
 
         while (c.moveToNext()) {
-            Category category = new Category(
-                    c.getInt(c.getColumnIndexOrThrow("category_id")),
-                    c.getInt(c.getColumnIndexOrThrow("user_id")),
-                    c.getString(c.getColumnIndexOrThrow("name")),
-                    c.getString(c.getColumnIndexOrThrow("type")),
-                    c.getLong(c.getColumnIndexOrThrow("created_at")),
-                    c.getInt(c.getColumnIndexOrThrow("is_synced")),
-                    c.getLong(c.getColumnIndexOrThrow("updated_at"))
-            );
+            Category category = cursorToCategory(c);
             list.add(category);
         }
         c.close();
         return list;
+    }
+    public Category cursorToCategory(Cursor c){
+        return new Category(
+                c.getInt(c.getColumnIndexOrThrow("category_id")),
+                c.getString(c.getColumnIndexOrThrow("uid")),
+                c.getString(c.getColumnIndexOrThrow("name")),
+                c.getString(c.getColumnIndexOrThrow("type")),
+                c.getLong(c.getColumnIndexOrThrow("created_at")),
+                c.getLong(c.getColumnIndexOrThrow("updated_at")),
+                c.getInt(c.getColumnIndexOrThrow("is_synced"))
+        );
     }
 }

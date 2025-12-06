@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.example.tt_nhom12.model.Expense;
 import com.example.tt_nhom12.model.Income;
 
 import java.util.ArrayList;
@@ -18,7 +19,7 @@ public class IncomeDao {
 
     public long insert(Income income) {
         ContentValues values = new ContentValues();
-        values.put("user_id", income.getUserId());
+        values.put("user_id", income.getUid());
         values.put("category_id", income.getCategoryId());
         values.put("amount", income.getAmount());
         values.put("date", income.getDate());
@@ -48,27 +49,30 @@ public class IncomeDao {
         return db.delete("incomes", "income_id = ?", args);
     }
 
-    public List<Income> getByUser(int userId) {
+    public List<Income> getByUser(String uid) {
         List<Income> list = new ArrayList<>();
 
-        String[] args = {String.valueOf(userId)};
+        String[] args = {uid};
         Cursor c = db.rawQuery("SELECT * FROM incomes WHERE user_id = ?", args);
 
         while (c.moveToNext()) {
-            Income income = new Income(
-                    c.getInt(c.getColumnIndexOrThrow("income_id")),
-                    c.getInt(c.getColumnIndexOrThrow("user_id")),
-                    c.getInt(c.getColumnIndexOrThrow("category_id")),
-                    c.getDouble(c.getColumnIndexOrThrow("amount")),
-                    c.getLong(c.getColumnIndexOrThrow("date")),
-                    c.getString(c.getColumnIndexOrThrow("note")),
-                    c.getLong(c.getColumnIndexOrThrow("created_at")),
-                    c.getInt(c.getColumnIndexOrThrow("is_synced")),
-                    c.getLong(c.getColumnIndexOrThrow("updated_at"))
-            );
+            Income income = cursorToIncome(c);
             list.add(income);
         }
         c.close();
         return list;
+    }
+    public Income cursorToIncome(Cursor c){
+        return new Income(
+                c.getInt(c.getColumnIndexOrThrow("income_id")),
+                c.getString(c.getColumnIndexOrThrow("uid")),
+                c.getInt(c.getColumnIndexOrThrow("category_id")),
+                c.getDouble(c.getColumnIndexOrThrow("amount")),
+                c.getLong(c.getColumnIndexOrThrow("date")),
+                c.getString(c.getColumnIndexOrThrow("note")),
+                c.getLong(c.getColumnIndexOrThrow("created_at")),
+                c.getLong(c.getColumnIndexOrThrow("updated_at")),
+                c.getInt(c.getColumnIndexOrThrow("is_synced"))
+        );
     }
 }

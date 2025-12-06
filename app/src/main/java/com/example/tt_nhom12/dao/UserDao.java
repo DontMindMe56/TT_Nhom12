@@ -42,28 +42,31 @@ public class UserDao {
         return db.update("users", values, "uid = ?", args);
     }
 
-    // Get user by UID not UserId
-    public User getByUid(String uid) {
-        String[] args = {String.valueOf(uid)};
-        Cursor c = db.rawQuery("SELECT * FROM users WHERE uid = ?", args);
+    //////////
+    public User getUserbyUid(String uid) {
+        String[] args = {uid};
+        Cursor c = db.rawQuery("SELECT * FROM users WHERE user_id = ?", args);
 
         if (c.moveToFirst()) {
-            User user = new User(
-                    c.getInt(c.getColumnIndexOrThrow("user_id")),
-                    c.getString(c.getColumnIndexOrThrow("uid")),
-                    c.getString(c.getColumnIndexOrThrow("email")),
-                    c.getString(c.getColumnIndexOrThrow("display_name")),
-                    c.getString(c.getColumnIndexOrThrow("photo_url")),
-                    c.getString(c.getColumnIndexOrThrow("provider")),
-                    c.getLong(c.getColumnIndexOrThrow("created_at")),
-                    c.getLong(c.getColumnIndexOrThrow("last_login")),
-                    c.getInt(c.getColumnIndexOrThrow("is_synced")),
-                    c.getLong(c.getColumnIndexOrThrow("updated_at"))
-            );
+            User user = cursorToUser(c);
             c.close();
             return user;
         }
         c.close();
         return null;
+    }
+    public User cursorToUser(Cursor c){
+        return new User(
+                c.getInt(c.getColumnIndexOrThrow("user_id")),
+                c.getString(c.getColumnIndexOrThrow("uid")),
+                c.getString(c.getColumnIndexOrThrow("email")),
+                c.getString(c.getColumnIndexOrThrow("display_name")),
+                c.getString(c.getColumnIndexOrThrow("photo_url")),
+                c.getString(c.getColumnIndexOrThrow("provider")),
+                c.getLong(c.getColumnIndexOrThrow("created_at")),
+                c.getLong(c.getColumnIndexOrThrow("last_login")),
+                c.getLong(c.getColumnIndexOrThrow("updated_at")),
+                c.getInt(c.getColumnIndexOrThrow("is_synced"))
+        );
     }
 }

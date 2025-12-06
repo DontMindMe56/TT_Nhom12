@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.example.tt_nhom12.model.Category;
 import com.example.tt_nhom12.model.Expense;
 
 import java.util.ArrayList;
@@ -19,7 +20,7 @@ public class ExpenseDao {
     // Insert
     public long insert(Expense expense) {
         ContentValues values = new ContentValues();
-        values.put("user_id", expense.getUserId());
+        values.put("user_id", expense.getUid());
         values.put("category_id", expense.getCategoryId());
         values.put("amount", expense.getAmount());
         values.put("date", expense.getDate());
@@ -52,27 +53,30 @@ public class ExpenseDao {
     }
 
     // Get all expenses of user
-    public List<Expense> getByUser(int userId) {
+    public List<Expense> getByUser(String uid) {
         List<Expense> list = new ArrayList<>();
 
-        String[] args = {String.valueOf(userId)};
+        String[] args = {uid};
         Cursor c = db.rawQuery("SELECT * FROM expenses WHERE user_id = ?", args);
 
         while (c.moveToNext()) {
-            Expense expense = new Expense(
-                    c.getInt(c.getColumnIndexOrThrow("expense_id")),
-                    c.getInt(c.getColumnIndexOrThrow("user_id")),
-                    c.getInt(c.getColumnIndexOrThrow("category_id")),
-                    c.getDouble(c.getColumnIndexOrThrow("amount")),
-                    c.getLong(c.getColumnIndexOrThrow("date")),
-                    c.getString(c.getColumnIndexOrThrow("note")),
-                    c.getInt(c.getColumnIndexOrThrow("created_at")),
-                    c.getInt(c.getColumnIndexOrThrow("is_synced")),
-                    c.getLong(c.getColumnIndexOrThrow("updated_at"))
-            );
+            Expense expense = cursorToExpense(c);
             list.add(expense);
         }
         c.close();
         return list;
+    }
+    public Expense cursorToExpense(Cursor c){
+        return new Expense(
+                c.getInt(c.getColumnIndexOrThrow("expense_id")),
+                c.getString(c.getColumnIndexOrThrow("uid")),
+                c.getInt(c.getColumnIndexOrThrow("category_id")),
+                c.getDouble(c.getColumnIndexOrThrow("amount")),
+                c.getLong(c.getColumnIndexOrThrow("date")),
+                c.getString(c.getColumnIndexOrThrow("note")),
+                c.getInt(c.getColumnIndexOrThrow("created_at")),
+                c.getLong(c.getColumnIndexOrThrow("updated_at")),
+                c.getInt(c.getColumnIndexOrThrow("is_synced"))
+        );
     }
 }
